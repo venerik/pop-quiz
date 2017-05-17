@@ -46,9 +46,9 @@ namespace PopQuiz
                 tests.Add(7, test);
                 test = new Test("Eighth", "With whom?", "...");
                 tests.Add(8, test);
-                test = new Test("Ninth", "What also?", "...");
+                test = new Test("Ninth", "What also?", "...") { IsFinal = true };
                 tests.Add(9, test);
-                test = new Test("Tenth", "Done now?", "...");
+                test = new Test("Tenth", "Done now?", "...") { IsFinal = true };
                 tests.Add(10, test);
 
                 return tests;
