@@ -64,54 +64,52 @@ namespace PopQuiz
         incorrect:
             cki = Console.ReadKey();
 
-            bool tResult = String.Equals(cki.Key.ToString(), "T", StringComparison.InvariantCultureIgnoreCase);
-            bool cResult = String.Equals(cki.Key.ToString(), "C", StringComparison.InvariantCultureIgnoreCase);
+            bool createTeams = String.Equals(cki.Key.ToString(), "T", StringComparison.InvariantCultureIgnoreCase);
+            bool createTeamCaptains = String.Equals(cki.Key.ToString(), "C", StringComparison.InvariantCultureIgnoreCase);
+
+            if(!createTeams && ! createTeamCaptains)
+            {
+                message = "\nThat is not a valid selection, please enter either a T or a C";
+                Broadcast(message);
+                goto incorrect;
+            }
 
             var thePlayers = Team.GetPlayer();
+            if (createTeamCaptains)
             {
+                Console.Clear();
+                var myPlayer = thePlayers[shuffledIntegers[7]];
+                captains = myPlayer.Name;
+                myPlayer = thePlayers[shuffledIntegers[3]];
 
-                if (tResult == false)
+                team = ("                         " + captains + myPlayer.Name);
+                captains = ($"                         Team 1:                   Team2:\n{team}");
+
+                message = ($"The selected team captains are:\n{captains}\n\nPress any key to continue when you are ready to proceed");
+                Broadcast(message);
+
+                Console.ReadKey();
+                Console.Clear();
+            }
+            else
+            {
+                Console.Clear();
+                for (int i = 2; i < 9; i += 2)
                 {
-                    if (cResult == false)
-                    {
-                        message = "\nThat is not a valid selection, please enter either a T or a C";
-                        Broadcast(message);
-                        goto incorrect;
-                    }
-                    Console.Clear();
-                    var myPlayer = thePlayers[shuffledIntegers[7]];
-                    captains = myPlayer.Name;
-                    myPlayer = thePlayers[shuffledIntegers[3]];
 
-                    team = ("                         " + captains + myPlayer.Name);
-                    captains = ($"                         Team 1:                   Team2:\n{team}");
+                    var myPlayer1 = thePlayers[shuffledIntegers[i - 2]];
+                    var myPlayer2 = thePlayers[shuffledIntegers[i - 1]];
 
-                    message = ($"The selected team captains are:\n{captains}\n\nPress any key to continue when you are ready to proceed");
-                    Broadcast(message);
+                    players1 = (players1 + "                         " + myPlayer1.Name + myPlayer2.Name + "\n");
 
-                    Console.ReadKey();
-                    Console.Clear();
                 }
-                else
-                {
-                    Console.Clear();
-                    for (int i = 2; i < 9; i += 2)
-                    {
 
-                        var myPlayer1 = thePlayers[shuffledIntegers[i - 2]];
-                        var myPlayer2 = thePlayers[shuffledIntegers[i - 1]];
-
-                        players1 = (players1 + "                         " + myPlayer1.Name + myPlayer2.Name + "\n");
-
-                    }
-
-                    team = players1;
-                    players1 = ("                         Team 1:                   Team2:\n" + players1);
+                team = players1;
+                players1 = ("                         Team 1:                   Team2:\n" + players1);
 
 
-                    message = ("You have chosen to have your teams randomly assigned.\nYour teams are shown below:\n\n" + players1);
-                    Broadcast(message);
-                }
+                message = ("You have chosen to have your teams randomly assigned.\nYour teams are shown below:\n\n" + players1);
+                Broadcast(message);
             }
 
             message = "Now that the teams are set, it is time to decide your team names.\n\nTeam 1, what will your team name be?";
@@ -171,7 +169,7 @@ namespace PopQuiz
             Console.Clear();
 
             string teamIntro;
-            var theAnswer = Test.GetTests();
+            var tests = Test.GetTests();
 
             bool IsOdd(int value)
             {
@@ -184,7 +182,7 @@ namespace PopQuiz
             for (int i = 0; i < 10; i++)
             {
                 Console.Clear();
-                var myQuestion = theAnswer[i + 1];
+                var myQuestion = tests[i + 1];
 
                 if (IsOdd(i + 1))
                 {
