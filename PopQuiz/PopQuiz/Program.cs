@@ -7,6 +7,8 @@ namespace PopQuiz
     class Program
     {
         static Random _random = new Random();
+        static bool _voiceYN;
+        static SpeechSynthesizer _synth;
 
         static void Shuffle<T>(T[] array)
         {
@@ -46,21 +48,18 @@ namespace PopQuiz
 
             message = "Welcome to the pop quiz!\nWould you like me to continue voicing this quiz?\nPress Y for Yes or any other key to continue without:";
             Console.WriteLine(message);
-            SpeechSynthesizer synth = new SpeechSynthesizer();
-            synth.SelectVoice("Microsoft Zira Desktop");
+
+            _synth = new SpeechSynthesizer();
+            _synth.SelectVoice("Microsoft Zira Desktop");
             //synth.Speak(text);
 
             cki = Console.ReadKey();
             Console.Clear();
 
-            bool voiceYN = String.Equals(cki.Key.ToString(), "Y", StringComparison.InvariantCultureIgnoreCase);
+            _voiceYN = String.Equals(cki.Key.ToString(), "Y", StringComparison.InvariantCultureIgnoreCase);
 
             message = "Thank you for your selection, would you like me to assign you a team at random or just pick team captains for you?\nPress T for a random Team or C for team Captains:";
-            Console.WriteLine(message);
-            if (voiceYN == true)
-            {
-                synth.Speak(message);
-            }
+            Broadcast(message);
 
         incorrect:
             cki = Console.ReadKey();
@@ -76,11 +75,7 @@ namespace PopQuiz
                     if (cResult == false)
                     {
                         message = "\nThat is not a valid selection, please enter either a T or a C";
-                        Console.WriteLine(message);
-                        if (voiceYN == true)
-                        {
-                            synth.Speak(message);
-                        }
+                        Broadcast(message);
                         goto incorrect;
                     }
                     Console.Clear();
@@ -92,14 +87,10 @@ namespace PopQuiz
                     captains = ($"                         Team 1:                   Team2:\n{team}");
 
                     message = ($"The selected team captains are:\n{captains}\n\nPress any key to continue when you are ready to proceed");
-                    Console.WriteLine(message);
-                    if (voiceYN == true)
-                    {
-                        synth.Speak(message);
-                    }
+                    Broadcast(message);
+
                     Console.ReadKey();
                     Console.Clear();
-
                 }
                 else
                 {
@@ -118,23 +109,13 @@ namespace PopQuiz
                     players1 = ("                         Team 1:                   Team2:\n" + players1);
 
 
-                    message = ("You have chosen to have your teams randomly assigned.\nYour teams are shown below:");
-
-                    Console.WriteLine("{0}\n\n{1}", message, players1);
-                    if (voiceYN == true)
-                    {
-                        synth.Speak(message);
-                    }
-
+                    message = ("You have chosen to have your teams randomly assigned.\nYour teams are shown below:\n\n" + players1);
+                    Broadcast(message);
                 }
             }
 
             message = "Now that the teams are set, it is time to decide your team names.\n\nTeam 1, what will your team name be?";
-            Console.WriteLine(message);
-            if (voiceYN == true)
-            {
-                synth.Speak(message);
-            }
+            Broadcast(message);
 
         Start:
             teamName1 = Console.ReadLine();
@@ -145,11 +126,7 @@ namespace PopQuiz
             }
 
             message = ("\nWelcome to the game " + teamName1 + "!\n\nTeam 2, now it's your turn.\nPlease enter your team name...");
-            Console.WriteLine(message);
-            if (voiceYN == true)
-            {
-                synth.Speak(message);
-            }
+            Broadcast(message);
         same:
             teamName2 = Console.ReadLine();
             //This is the second
@@ -164,20 +141,12 @@ namespace PopQuiz
             if (result == true)
             {
                 message = "\n\nYou can't have the same team names...\nStop being lazy and give me another one!";
-                Console.WriteLine(message);
-                if (voiceYN == true)
-                {
-                    synth.Speak(message);
-                }
+                Broadcast(message);
                 goto same;
             }
 
             message = ("\n\nWelcome to the game " + teamName2 + "!\nTeam names are set... Let's get ready to begin.");
-            Console.WriteLine(message);
-            if (voiceYN == true)
-            {
-                synth.Speak(message);
-            }
+            Broadcast(message);
 
             int tl = teamName1.Length;
             int space2 = (25 - tl);
@@ -189,7 +158,7 @@ namespace PopQuiz
             }
 
             team = ($"                         {teamName1}{space}{teamName2}\n{team}\n\n");
-            if (voiceYN == false)
+            if (_voiceYN == false)
             {
                 Console.WriteLine("\n3");
                 System.Threading.Thread.Sleep(1000);
@@ -305,12 +274,7 @@ namespace PopQuiz
                 }
 
                 message = ($"{team}{myQuestion.NumText} Question:\n\n{teamIntro}\n\n{myQuestion.Question}");
-                Console.WriteLine(message);
-
-                if (voiceYN == true)
-                {
-                    synth.Speak(message);
-                }
+                Broadcast(message);
 
             blank:
                 string answer = Console.ReadLine();
@@ -346,7 +310,7 @@ namespace PopQuiz
 
                     if (result == true)
                     {
-                        Console.WriteLine("\nProfanity is not accepted! 1 point has been deducted from your team's score");
+                        Broadcast("\nProfanity is not accepted! 1 point has been deducted from your team's score");
                         if (IsOdd(i))
                         {
                             t1Score = t1Score - 1;
@@ -359,6 +323,15 @@ namespace PopQuiz
                         System.Threading.Thread.Sleep(2000);
                     }
                 }
+            }
+        }
+
+        private static void Broadcast(string message)
+        {
+            Console.WriteLine(message);
+            if (_voiceYN == true)
+            {
+                _synth.Speak(message);
             }
         }
     }
