@@ -41,7 +41,6 @@ namespace PopQuiz
 
             // Unclear what these are intended to do (for formatting it seems)
             string team;
-            string captains;
             string players1 = null;
             string message;
             ConsoleKeyInfo cki;
@@ -79,12 +78,11 @@ namespace PopQuiz
             if (createTeamCaptains)
             {
                 Console.Clear();
-                var myPlayer = players[shuffledIntegers[7]];
-                captains = myPlayer.Name;
-                myPlayer = players[shuffledIntegers[3]];
+                _team1.Captain = players[shuffledIntegers[7]];
+                _team2.Captain = players[shuffledIntegers[3]];
 
-                team = ("                         " + captains + myPlayer.Name);
-                captains = ($"                         Team 1:                   Team2:\n{team}");
+                team = ("                         " + _team1.Captain + _team2.Captain);
+                var captains = ($"                         Team 1:                   Team2:\n{team}");
 
                 message = ($"The selected team captains are:\n{captains}\n\nPress any key to continue when you are ready to proceed");
                 Broadcast(message);
