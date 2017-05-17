@@ -96,13 +96,13 @@ namespace PopQuiz
             {
                 Console.Clear();
 
-                var teamIntro = test.Value.IsFinal ? GetTeamIntroFinalQuestion(game.CurrentTeam.Name) :  GetTeamIntro(game.CurrentTeam.Name);
+                var teamIntro = test.IsFinal ? GetTeamIntroFinalQuestion(game.CurrentTeam.Name) :  GetTeamIntro(game.CurrentTeam.Name);
 
                 Broadcast(View.PrintTeams(_team1, _team2));
-                Broadcast($"{test.Value.NumText} Question:\n\n{teamIntro}\n\n{test.Value.Question}");
+                Broadcast($"{test.NumText} Question:\n\n{teamIntro}\n\n{test.Question}");
 
                 var answer = AskForAnswer();
-                if (string.Equals(answer, test.Value.Answer, StringComparison.InvariantCultureIgnoreCase))
+                if (string.Equals(answer, test.Answer, StringComparison.InvariantCultureIgnoreCase))
                 {
                     game.CurrentTeam.IncreaseScore(1);
                 }

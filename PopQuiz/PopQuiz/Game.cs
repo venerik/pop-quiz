@@ -25,31 +25,31 @@ namespace PopQuiz
             CurrentTeam = CurrentTeam == Team1 ? Team2 : Team1;
         }
 
-        public Dictionary<int, Test> Tests
+        public IEnumerable<Test> Tests
         {
             get
             {
-                var tests = new Dictionary<int, Test>();
+                var tests = new List<Test>();
                 var test = new Test("First", "Who?", "...");
-                tests.Add(1, test);
+                tests.Add(test);
                 test = new Test("Second", "What?", "...");
-                tests.Add(2, test);
+                tests.Add(test);
                 test = new Test("Third", "Where?", "...");
-                tests.Add(3, test);
+                tests.Add(test);
                 test = new Test("Fourth", "When?", "...");
-                tests.Add(4, test);
+                tests.Add(test);
                 test = new Test("Fifth", "How?", "...");
-                tests.Add(5, test);
+                tests.Add(test);
                 test = new Test("Sixth", "Why?", "...");
-                tests.Add(6, test);
+                tests.Add(test);
                 test = new Test("Seventh", "Which?", "...");
-                tests.Add(7, test);
+                tests.Add(test);
                 test = new Test("Eighth", "With whom?", "...");
-                tests.Add(8, test);
+                tests.Add(test);
                 test = new Test("Ninth", "What also?", "...") { IsFinal = true };
-                tests.Add(9, test);
+                tests.Add(test);
                 test = new Test("Tenth", "Done now?", "...") { IsFinal = true };
-                tests.Add(10, test);
+                tests.Add(test);
 
                 return tests;
             }
