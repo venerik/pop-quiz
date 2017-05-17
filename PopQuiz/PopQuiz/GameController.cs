@@ -55,74 +55,35 @@ namespace PopQuiz
 
             Console.Clear();
 
+            var game = new Game(_team1, _team2);
+
             string teamIntro;
-            string message;
             var tests = Test.GetTests();
-
-            bool IsOdd(int value)
-            {
-                return value % 2 != 0;
-            }
-
-            int t1Score = 0;
-            int t2Score = 0;
 
             for (int i = 0; i < 10; i++)
             {
                 Console.Clear();
                 var myQuestion = tests[i + 1];
 
-                if (IsOdd(i + 1))
-                {
-                    teamIntro = GetTeamIntro(_shuffledIntegers, _team1.Name, i);
-                }
-                else
-                {
-                    teamIntro = GetTeamIntro(_shuffledIntegers, _team2.Name, i);
-                }
+                teamIntro = GetTeamIntro(_shuffledIntegers, game.CurrentTeam.Name, i);
 
-                message = View.PrintTeams(_team1, _team2);
-                message += $"{myQuestion.NumText} Question:\n\n{teamIntro}\n\n{myQuestion.Question}";
-                Broadcast(message);
+                Broadcast(View.PrintTeams(_team1, _team2));
+                Broadcast($"{myQuestion.NumText} Question:\n\n{teamIntro}\n\n{myQuestion.Question}");
 
-            blank:
-                string answer = Console.ReadLine();
-                //This is the third
-                if (string.IsNullOrEmpty(answer))
+                var answer = AskForAnswer();
+                if (string.Equals(answer, myQuestion.Answer, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    goto blank;
+                    game.CurrentTeam.IncreaseScore(1);
                 }
 
-                var result = string.Equals(answer, myQuestion.Answer, StringComparison.InvariantCultureIgnoreCase);
-
-                if (result == true)
+                if (AnswerContainsProfanity(answer))
                 {
-                    if (IsOdd(i + 1))
-                    {
-                        t1Score = t1Score + 1;
-                    }
-                    else
-                    {
-                        t2Score = t2Score + 1;
-                    }
+                    Broadcast("\nProfanity is not accepted! 1 point has been deducted from your team's score");
+                    game.CurrentTeam.DecreaseScore(1);
+                    System.Threading.Thread.Sleep(2000);
                 }
-                else
-                {
-                    if (AnswerContainsProfanity(answer))
-                    {
-                        Broadcast("\nProfanity is not accepted! 1 point has been deducted from your team's score");
-                        if (IsOdd(i))
-                        {
-                            t1Score = t1Score - 1;
-                        }
-                        else
-                        {
-                            t2Score = t2Score - 1;
-                        }
 
-                        System.Threading.Thread.Sleep(2000);
-                    }
-                }
+                game.NextTeam();
             }
         }
 
@@ -168,6 +129,18 @@ namespace PopQuiz
                 }
                 Broadcast("You have chosen to have your teams randomly assigned.\nYour teams are shown below:\n\n" + View.PrintTeams(_team1, _team2));
             }
+        }
+
+        private string AskForAnswer()
+        {
+        blank:
+            string answer = Console.ReadLine();
+            //This is the third
+            if (string.IsNullOrEmpty(answer))
+            {
+                goto blank;
+            }
+            return answer;
         }
 
         private TeamType AskForTypeOfTeams()
