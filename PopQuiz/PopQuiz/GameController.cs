@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Speech.Synthesis;
 
 namespace PopQuiz
@@ -12,11 +13,43 @@ namespace PopQuiz
         Team _team1 = new Team();
         Team _team2 = new Team();
         int[] _shuffledIntegers;
+        Queue<string> _teamIntros;
 
         public GameController()
         {
             _shuffledIntegers = new[] { 1, 2, 3, 4, 5, 6, 7, 8 };
             Shuffle(_shuffledIntegers);
+        }
+
+        private Queue<string> TeamIntros
+        {
+            get
+            {
+                if (_teamIntros != null)
+                {
+                    return _teamIntros;
+                }
+
+                var intros = new List<string>
+                {
+                    "{0} you're up!",
+                    "{0} it's your turn.",
+                    "{0} this question's yours.",
+                    "{0} let's see if you can get this one.",
+                    "{0}! I've picked this one especially for you...",
+                    "{0} this is a tough one!",
+                    "{0} whenever you're ready, here's your question:",
+                    "{0} try this one on for size:"
+                };
+
+                _teamIntros = new Queue<string>();
+                foreach (var intro in intros.OrderBy(x => _random.Next()))
+                {
+                    _teamIntros.Enqueue(intro);
+                }
+                
+                return _teamIntros;
+            }
         }
 
         void Shuffle<T>(T[] array)
@@ -52,14 +85,18 @@ namespace PopQuiz
             Broadcast("\n\nWelcome to the game " + _team2.Name + "!\nTeam names are set... Let's get ready to begin.");
 
             ShowCountDown();
+            PlayGame();
+        }
 
+        private void PlayGame()
+        {
             var game = new Game(_team1, _team2);
 
-            foreach(var test in game.Tests)
+            foreach (var test in game.Tests)
             {
                 Console.Clear();
 
-                var teamIntro = GetTeamIntro(_shuffledIntegers, game.CurrentTeam.Name, test.Key);
+                var teamIntro = test.Value.IsFinal ? GetTeamIntroFinalQuestion(game.CurrentTeam.Name) :  GetTeamIntro(game.CurrentTeam.Name);
 
                 Broadcast(View.PrintTeams(_team1, _team2));
                 Broadcast($"{test.Value.NumText} Question:\n\n{teamIntro}\n\n{test.Value.Question}");
@@ -212,44 +249,16 @@ namespace PopQuiz
             Console.Title = "Quiz";
         }
 
-        private static string GetTeamIntro(int[] shuffledIntegers, string teamName, int i)
+        private string GetTeamIntroFinalQuestion(string teamName)
         {
-            string teamIntro;
-            if (i >= 8)
-            {
-                teamIntro = ($"{teamName} time for your final question.");
-            }
-            else
-            {
-                switch (shuffledIntegers[i])
-                {
-                    case 1:
-                        teamIntro = ($"{teamName} you're up!");
-                        break;
-                    case 2:
-                        teamIntro = ($"{teamName} it's your turn.");
-                        break;
-                    case 3:
-                        teamIntro = ($"{teamName} this question's yours.");
-                        break;
-                    case 4:
-                        teamIntro = ($"{teamName} let's see if you can get this one.");
-                        break;
-                    case 5:
-                        teamIntro = ($"{teamName}! I've picked this one especially for you...");
-                        break;
-                    case 6:
-                        teamIntro = ($"{teamName} this is a tough one!");
-                        break;
-                    case 7:
-                        teamIntro = ($"{teamName} whenever you're ready, here's your question:");
-                        break;
-                    default:
-                        teamIntro = ($"{teamName} try this one on for size:");
-                        break;
-                }
-            }
-            return teamIntro;
+            return $"{teamName} time for you final question.";
+        }
+
+        private string GetTeamIntro(string teamName)
+        {
+            var nextTeamIntro = TeamIntros.Dequeue();
+            TeamIntros.Enqueue(nextTeamIntro);
+            return string.Format(nextTeamIntro, teamName);
         }
 
         private static bool AnswerContainsProfanity(string answer)

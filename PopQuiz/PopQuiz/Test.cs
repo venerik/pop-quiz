@@ -7,7 +7,7 @@ namespace PopQuiz
         public string Question { get; set; }
         public string Answer { get; set; }
         public string NumText { get; set; }
-
+        public bool IsFinal { get; set; }
 
         public Test(string numText, string question, string answer)
         {
