@@ -299,16 +299,7 @@ namespace PopQuiz
                 }
                 else
                 {
-                    for (int p = 0; p < Profanity.Count; p++)
-                    {
-                        if (answer.ToLower().Contains(Profanity[p]))
-                        {
-                            result = true;
-                            break;
-                        }
-                    }
-
-                    if (result == true)
+                    if (AnswerContainsProfanity(answer))
                     {
                         Broadcast("\nProfanity is not accepted! 1 point has been deducted from your team's score");
                         if (IsOdd(i))
@@ -324,6 +315,31 @@ namespace PopQuiz
                     }
                 }
             }
+        }
+
+        private static bool AnswerContainsProfanity(string answer)
+        {
+            List<string> Profanity = new List<string>();
+            Profanity.Add("fuck");
+            Profanity.Add("shit");
+            Profanity.Add("bollocks");
+            Profanity.Add("wank");
+            Profanity.Add("cunt");
+            Profanity.Add("tosser");
+            Profanity.Add("bastard");
+            Profanity.Add("fanny");
+            Profanity.Add("faggot");
+            Profanity.Add("arse");
+
+            for (int p = 0; p < Profanity.Count; p++)
+            {
+                if (answer.ToLower().Contains(Profanity[p]))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static void Broadcast(string message)
