@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PopQuiz
 {
     public class Game
     {
+        private Random _random = new Random();
+
         public Game(Team team1, Team team2)
         {
             Team1 = team1;
@@ -52,6 +52,32 @@ namespace PopQuiz
                 tests.Add(test);
 
                 return tests;
+            }
+        }
+
+        public IReadOnlyList<Player> Players
+        {
+            get
+            {
+                    var players = new List<Player>();
+                    var player = new Player("Name 1");
+                    players.Add(player);
+                    player = new Player("Name 2");
+                    players.Add(player);
+                    player = new Player("Name 3");
+                    players.Add(player);
+                    player = new Player("Name 4");
+                    players.Add(player);
+                    player = new Player("Name 5");
+                    players.Add(player);
+                    player = new Player("Name 6");
+                    players.Add(player);
+                    player = new Player("Name 7");
+                    players.Add(player);
+                    player = new Player("Name 8");
+                    players.Add(player);
+
+                    return players.OrderBy(x => _random.Next()).ToList();
             }
         }
     }

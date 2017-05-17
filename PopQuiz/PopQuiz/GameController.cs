@@ -7,11 +7,10 @@ namespace PopQuiz
 {
     public class GameController
     {
+        Game _game;
         Random _random = new Random();
         bool _voiceYN;
         SpeechSynthesizer _synth;
-        Team _team1 = new Team();
-        Team _team2 = new Team();
         int[] _shuffledIntegers;
         Queue<string> _teamIntros;
 
@@ -19,6 +18,7 @@ namespace PopQuiz
         {
             _shuffledIntegers = new[] { 1, 2, 3, 4, 5, 6, 7, 8 };
             Shuffle(_shuffledIntegers);
+            _game = new Game(new Team(), new Team());
         }
 
         private Queue<string> TeamIntros
@@ -78,11 +78,11 @@ namespace PopQuiz
 
             Broadcast("Now that the teams are set, it is time to decide your team names.\n\nTeam 1, what will your team name be?");
 
-            AskForTeamName(_team1);
-            Broadcast("\nWelcome to the game " + _team1.Name + "!\n\nTeam 2, now it's your turn.\nPlease enter your team name...");
+            AskForTeamName(_game.Team1);
+            Broadcast("\nWelcome to the game " + _game.Team1.Name + "!\n\nTeam 2, now it's your turn.\nPlease enter your team name...");
 
-            AskForTeamName(_team2, _team1.Name);
-            Broadcast("\n\nWelcome to the game " + _team2.Name + "!\nTeam names are set... Let's get ready to begin.");
+            AskForTeamName(_game.Team2, _game.Team1.Name);
+            Broadcast("\n\nWelcome to the game " + _game.Team2.Name + "!\nTeam names are set... Let's get ready to begin.");
 
             ShowCountDown();
             PlayGame();
@@ -90,31 +90,29 @@ namespace PopQuiz
 
         private void PlayGame()
         {
-            var game = new Game(_team1, _team2);
-
-            foreach (var test in game.Tests)
+            foreach (var test in _game.Tests)
             {
                 Console.Clear();
 
-                var teamIntro = test.IsFinal ? GetTeamIntroFinalQuestion(game.CurrentTeam.Name) :  GetTeamIntro(game.CurrentTeam.Name);
+                var teamIntro = test.IsFinal ? GetTeamIntroFinalQuestion(_game.CurrentTeam.Name) :  GetTeamIntro(_game.CurrentTeam.Name);
 
-                Broadcast(View.PrintTeams(_team1, _team2));
+                Broadcast(View.PrintTeams(_game.Team1, _game.Team2));
                 Broadcast($"{test.NumText} Question:\n\n{teamIntro}\n\n{test.Question}");
 
                 var answer = AskForAnswer();
                 if (string.Equals(answer, test.Answer, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    game.CurrentTeam.IncreaseScore(1);
+                    _game.CurrentTeam.IncreaseScore(1);
                 }
 
                 if (AnswerContainsProfanity(answer))
                 {
                     Broadcast("\nProfanity is not accepted! 1 point has been deducted from your team's score");
-                    game.CurrentTeam.DecreaseScore(1);
+                    _game.CurrentTeam.DecreaseScore(1);
                     System.Threading.Thread.Sleep(2000);
                 }
 
-                game.NextTeam();
+                _game.NextTeam();
             }
         }
 
@@ -133,14 +131,13 @@ namespace PopQuiz
 
         private void CreateTeams(TeamType teamType)
         {
-            var players = Player.GetPlayers();
             if (teamType == TeamType.Captains)
             {
                 Console.Clear();
-                _team1.Captain = players[_shuffledIntegers[7]];
-                _team2.Captain = players[_shuffledIntegers[3]];
+                _game.Team1.Captain = _game.Players[0];
+                _game.Team2.Captain = _game.Players[1];
 
-                var captains = View.PrintTeams(_team1, _team2);
+                var captains = View.PrintTeams(_game.Team1, _game.Team2);
 
                 Broadcast($"The selected team captains are:\n{captains}\n\nPress any key to continue when you are ready to proceed");
 
@@ -150,15 +147,13 @@ namespace PopQuiz
             else
             {
                 Console.Clear();
-                for (int i = 2; i < 9; i += 2)
+                var team = _game.Team1;
+                foreach(var player in _game.Players)
                 {
-
-                    var playerTeam1 = players[_shuffledIntegers[i - 2]];
-                    var playerTeam2 = players[_shuffledIntegers[i - 1]];
-                    _team1.AddPlayer(playerTeam1);
-                    _team2.AddPlayer(playerTeam2);
+                    team.AddPlayer(player);
+                    team = team == _game.Team1 ? _game.Team2 : _game.Team1;
                 }
-                Broadcast("You have chosen to have your teams randomly assigned.\nYour teams are shown below:\n\n" + View.PrintTeams(_team1, _team2));
+                Broadcast("You have chosen to have your teams randomly assigned.\nYour teams are shown below:\n\n" + View.PrintTeams(_game.Team1, _game.Team2));
             }
         }
 
