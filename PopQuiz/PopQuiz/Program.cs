@@ -171,7 +171,7 @@ namespace PopQuiz
             Console.Clear();
 
             string teamIntro;
-            var theAnswer = Answers.GetAnswer();
+            var theAnswer = Test.GetTests();
 
             bool IsOdd(int value)
             {

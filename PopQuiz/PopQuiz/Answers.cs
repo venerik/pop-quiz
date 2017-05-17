@@ -2,47 +2,45 @@
 
 namespace PopQuiz
 {
-    public class Answers
+    public class Test
     {
         public string Question { get; set; }
         public string Answer { get; set; }
         public string NumText { get; set; }
 
 
-        public Answers(string numText, string question, string answer)
+        public Test(string numText, string question, string answer)
         {
             NumText = numText;
             Question = question;
             Answer = answer;
         }
 
-        public static Dictionary<int, Answers> GetAnswer()
+        public static Dictionary<int, Test> GetTests()
         {
-            var question = new Dictionary<int, Answers>();
-            var theAnswer = new Answers("First", "Who?", "...");
-            question.Add(1, theAnswer);
-            theAnswer = new Answers("Second", "What?", "...");
-            question.Add(2, theAnswer);
-            theAnswer = new Answers("Third", "Where?", "...");
-            question.Add(3, theAnswer);
-            theAnswer = new Answers("Fourth", "When?", "...");
-            question.Add(4, theAnswer);
-            theAnswer = new Answers("Fifth", "How?", "...");
-            question.Add(5, theAnswer);
-            theAnswer = new Answers("Sixth", "Why?", "...");
-            question.Add(6, theAnswer);
-            theAnswer = new Answers("Seventh", "Which?", "...");
-            question.Add(7, theAnswer);
-            theAnswer = new Answers("Eighth", "With whom?", "...");
-            question.Add(8, theAnswer);
-            theAnswer = new Answers("Ninth", "What also?", "...");
-            question.Add(9, theAnswer);
-            theAnswer = new Answers("Tenth", "Done now?", "...");
-            question.Add(10, theAnswer);
+            var tests = new Dictionary<int, Test>();
+            var test = new Test("First", "Who?", "...");
+            tests.Add(1, test);
+            test = new Test("Second", "What?", "...");
+            tests.Add(2, test);
+            test = new Test("Third", "Where?", "...");
+            tests.Add(3, test);
+            test = new Test("Fourth", "When?", "...");
+            tests.Add(4, test);
+            test = new Test("Fifth", "How?", "...");
+            tests.Add(5, test);
+            test = new Test("Sixth", "Why?", "...");
+            tests.Add(6, test);
+            test = new Test("Seventh", "Which?", "...");
+            tests.Add(7, test);
+            test = new Test("Eighth", "With whom?", "...");
+            tests.Add(8, test);
+            test = new Test("Ninth", "What also?", "...");
+            tests.Add(9, test);
+            test = new Test("Tenth", "Done now?", "...");
+            tests.Add(10, test);
 
-
-
-            return question;
+            return tests;
         }
 
 
