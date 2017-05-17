@@ -7,69 +7,24 @@ namespace PopQuiz
 {
     public class GameController
     {
-        Game _game;
-        Random _random = new Random();
-        bool _voiceYN;
-        SpeechSynthesizer _synth;
-        int[] _shuffledIntegers;
-        Queue<string> _teamIntros;
+        private Random _random = new Random();
+        private Game _game;
+        private bool _voiceYN;
+        private SpeechSynthesizer _synth;
+        private Queue<string> _teamIntros;
 
         public GameController()
         {
-            _shuffledIntegers = new[] { 1, 2, 3, 4, 5, 6, 7, 8 };
-            Shuffle(_shuffledIntegers);
             _game = new Game(new Team(), new Team());
         }
 
-        private Queue<string> TeamIntros
-        {
-            get
-            {
-                if (_teamIntros != null)
-                {
-                    return _teamIntros;
-                }
-
-                var intros = new List<string>
-                {
-                    "{0} you're up!",
-                    "{0} it's your turn.",
-                    "{0} this question's yours.",
-                    "{0} let's see if you can get this one.",
-                    "{0}! I've picked this one especially for you...",
-                    "{0} this is a tough one!",
-                    "{0} whenever you're ready, here's your question:",
-                    "{0} try this one on for size:"
-                };
-
-                _teamIntros = new Queue<string>();
-                foreach (var intro in intros.OrderBy(x => _random.Next()))
-                {
-                    _teamIntros.Enqueue(intro);
-                }
-                
-                return _teamIntros;
-            }
-        }
-
-        void Shuffle<T>(T[] array)
-        {
-            int n = array.Length;
-            for (int i = 0; i < n; i++)
-            {
-                int r = i + (int)(_random.NextDouble() * (n - i));
-                T t = array[r];
-                array[r] = array[i];
-                array[i] = t;
-            }
-        }
-
-        private static void FlushKeyboard()
-        {
-            while (Console.In.Read() != -1) ;
-        }
-
         public void Start()
+        {
+            SetupGame();
+            PlayGame();
+        }
+
+        private void SetupGame()
         {
             AdjustConsoleSettings();
             AskForVoiceSupport();
@@ -85,7 +40,6 @@ namespace PopQuiz
             Broadcast("\n\nWelcome to the game " + _game.Team2.Name + "!\nTeam names are set... Let's get ready to begin.");
 
             ShowCountDown();
-            PlayGame();
         }
 
         private void PlayGame()
@@ -287,6 +241,42 @@ namespace PopQuiz
             if (_voiceYN == true)
             {
                 _synth.Speak(message);
+            }
+        }
+
+        private Queue<string> TeamIntros
+        {
+            get
+            {
+                if (_teamIntros != null)
+                {
+                    return _teamIntros;
+                }
+
+                InitializeTeamIntros();
+
+                return _teamIntros;
+            }
+        }
+
+        private void InitializeTeamIntros()
+        {
+            var intros = new List<string>
+                {
+                    "{0} you're up!",
+                    "{0} it's your turn.",
+                    "{0} this question's yours.",
+                    "{0} let's see if you can get this one.",
+                    "{0}! I've picked this one especially for you...",
+                    "{0} this is a tough one!",
+                    "{0} whenever you're ready, here's your question:",
+                    "{0} try this one on for size:"
+                };
+
+            _teamIntros = new Queue<string>();
+            foreach (var intro in intros.OrderBy(x => _random.Next()))
+            {
+                _teamIntros.Enqueue(intro);
             }
         }
     }
