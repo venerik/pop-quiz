@@ -14,21 +14,21 @@ namespace PopQuiz
         public static Dictionary<int, Player> GetPlayers()
         {
             var players = new Dictionary<int, Player>();
-            var player = new Player("Name1                     ");
+            var player = new Player("Name 1");
             players.Add(1, player);
-            player = new Player("Name2                     ");
+            player = new Player("Name 2");
             players.Add(2, player);
-            player = new Player("Name3                     ");
+            player = new Player("Name 3");
             players.Add(3, player);
-            player = new Player("Name4                     ");
+            player = new Player("Name 4");
             players.Add(4, player);
-            player = new Player("Name5                     ");
+            player = new Player("Name 5");
             players.Add(5, player);
-            player = new Player("Name6                     ");
+            player = new Player("Name 6");
             players.Add(6, player);
-            player = new Player("Name7                     ");
+            player = new Player("Name 7");
             players.Add(7, player);
-            player = new Player("Name8                     ");
+            player = new Player("Name 8");
             players.Add(8, player);
 
             return players;

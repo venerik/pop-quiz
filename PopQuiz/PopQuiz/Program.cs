@@ -40,8 +40,6 @@ namespace PopQuiz
             Shuffle(shuffledIntegers);
 
             // Unclear what these are intended to do (for formatting it seems)
-            string team;
-            string players1 = null;
             string message;
             ConsoleKeyInfo cki;
             Console.TreatControlCAsInput = true;
@@ -81,8 +79,7 @@ namespace PopQuiz
                 _team1.Captain = players[shuffledIntegers[7]];
                 _team2.Captain = players[shuffledIntegers[3]];
 
-                team = ("                         " + _team1.Captain + _team2.Captain);
-                var captains = ($"                         Team 1:                   Team2:\n{team}");
+                var captains = View.PrintTeams(_team1, _team2);
 
                 message = ($"The selected team captains are:\n{captains}\n\nPress any key to continue when you are ready to proceed");
                 Broadcast(message);
@@ -100,16 +97,8 @@ namespace PopQuiz
                     var playerTeam2 = players[shuffledIntegers[i - 1]];
                     _team1.AddPlayer(playerTeam1);
                     _team2.AddPlayer(playerTeam2);
-
-                    players1 = (players1 + "                         " + playerTeam1.Name + playerTeam2.Name + "\n");
-
                 }
-
-                team = players1;
-                players1 = ("                         Team 1:                   Team2:\n" + players1);
-
-
-                message = ("You have chosen to have your teams randomly assigned.\nYour teams are shown below:\n\n" + players1);
+                message = ("You have chosen to have your teams randomly assigned.\nYour teams are shown below:\n\n" + View.PrintTeams(_team1, _team2));
                 Broadcast(message);
             }
 
@@ -156,7 +145,6 @@ namespace PopQuiz
                 space = (space + " ");
             }
 
-            team = ($"                         {_team1.Name}{space}{_team2.Name}\n{team}\n\n");
             if (_voiceYN == false)
             {
                 Console.WriteLine("\n3");
@@ -194,7 +182,8 @@ namespace PopQuiz
                     teamIntro = GetTeamIntro(shuffledIntegers, _team2.Name, i);
                 }
 
-                message = ($"{team}{myQuestion.NumText} Question:\n\n{teamIntro}\n\n{myQuestion.Question}");
+                message = View.PrintTeams(_team1, _team2);
+                message += $"{myQuestion.NumText} Question:\n\n{teamIntro}\n\n{myQuestion.Question}";
                 Broadcast(message);
 
             blank:
