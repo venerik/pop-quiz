@@ -96,10 +96,12 @@ namespace PopQuiz
                 for (int i = 2; i < 9; i += 2)
                 {
 
-                    var myPlayer1 = players[shuffledIntegers[i - 2]];
-                    var myPlayer2 = players[shuffledIntegers[i - 1]];
+                    var playerTeam1 = players[shuffledIntegers[i - 2]];
+                    var playerTeam2 = players[shuffledIntegers[i - 1]];
+                    _team1.AddPlayer(playerTeam1);
+                    _team2.AddPlayer(playerTeam2);
 
-                    players1 = (players1 + "                         " + myPlayer1.Name + myPlayer2.Name + "\n");
+                    players1 = (players1 + "                         " + playerTeam1.Name + playerTeam2.Name + "\n");
 
                 }
 
