@@ -74,13 +74,13 @@ namespace PopQuiz
                 goto incorrect;
             }
 
-            var thePlayers = Team.GetPlayer();
+            var players = Player.GetPlayers();
             if (createTeamCaptains)
             {
                 Console.Clear();
-                var myPlayer = thePlayers[shuffledIntegers[7]];
+                var myPlayer = players[shuffledIntegers[7]];
                 captains = myPlayer.Name;
-                myPlayer = thePlayers[shuffledIntegers[3]];
+                myPlayer = players[shuffledIntegers[3]];
 
                 team = ("                         " + captains + myPlayer.Name);
                 captains = ($"                         Team 1:                   Team2:\n{team}");
@@ -97,8 +97,8 @@ namespace PopQuiz
                 for (int i = 2; i < 9; i += 2)
                 {
 
-                    var myPlayer1 = thePlayers[shuffledIntegers[i - 2]];
-                    var myPlayer2 = thePlayers[shuffledIntegers[i - 1]];
+                    var myPlayer1 = players[shuffledIntegers[i - 2]];
+                    var myPlayer2 = players[shuffledIntegers[i - 1]];
 
                     players1 = (players1 + "                         " + myPlayer1.Name + myPlayer2.Name + "\n");
 
