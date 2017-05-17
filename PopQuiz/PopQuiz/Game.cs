@@ -29,29 +29,18 @@ namespace PopQuiz
         {
             get
             {
-                var tests = new List<Test>();
-                var test = new Test("First", "Who?", "...");
-                tests.Add(test);
-                test = new Test("Second", "What?", "...");
-                tests.Add(test);
-                test = new Test("Third", "Where?", "...");
-                tests.Add(test);
-                test = new Test("Fourth", "When?", "...");
-                tests.Add(test);
-                test = new Test("Fifth", "How?", "...");
-                tests.Add(test);
-                test = new Test("Sixth", "Why?", "...");
-                tests.Add(test);
-                test = new Test("Seventh", "Which?", "...");
-                tests.Add(test);
-                test = new Test("Eighth", "With whom?", "...");
-                tests.Add(test);
-                test = new Test("Ninth", "What also?", "...") { IsFinal = true };
-                tests.Add(test);
-                test = new Test("Tenth", "Done now?", "...") { IsFinal = true };
-                tests.Add(test);
-
-                return tests;
+                return new List<Test>() {
+                    new Test("First", "Who?", "..."),
+                    new Test("Second", "What?", "..."),
+                    new Test("Third", "Where?", "..."),
+                    new Test("Fourth", "When?", "..."),
+                    new Test("Fifth", "How?", "..."),
+                    new Test("Sixth", "Why?", "..."),
+                    new Test("Seventh", "Which?", "..."),
+                    new Test("Eighth", "With whom?", "..."),
+                    new Test("Ninth", "What also?", "...") { IsFinal = true },
+                    new Test("Tenth", "Done now?", "...") { IsFinal = true },
+                };
             }
         }
 
@@ -59,25 +48,17 @@ namespace PopQuiz
         {
             get
             {
-                    var players = new List<Player>();
-                    var player = new Player("Name 1");
-                    players.Add(player);
-                    player = new Player("Name 2");
-                    players.Add(player);
-                    player = new Player("Name 3");
-                    players.Add(player);
-                    player = new Player("Name 4");
-                    players.Add(player);
-                    player = new Player("Name 5");
-                    players.Add(player);
-                    player = new Player("Name 6");
-                    players.Add(player);
-                    player = new Player("Name 7");
-                    players.Add(player);
-                    player = new Player("Name 8");
-                    players.Add(player);
-
-                    return players.OrderBy(x => _random.Next()).ToList();
+                var players = new List<Player>() {
+                    new Player("Name 1"),
+                    new Player("Name 2"),
+                    new Player("Name 3"),
+                    new Player("Name 4"),
+                    new Player("Name 5"),
+                    new Player("Name 6"),
+                    new Player("Name 7"),
+                    new Player("Name 8")
+                };
+                return players.OrderBy(x => _random.Next()).ToList();
             }
         }
     }
