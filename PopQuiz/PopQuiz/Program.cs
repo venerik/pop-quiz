@@ -200,77 +200,11 @@ namespace PopQuiz
 
                 if (IsOdd(i + 1))
                 {
-                    if (i == 8)
-                    {
-                        teamIntro = ($"{teamName1} time for your final question.");
-                    }
-                    else
-                    {
-                        switch (shuffledIntegers[i])
-                        {
-                            case 1:
-                                teamIntro = ($"{teamName1} you're up!");
-                                break;
-                            case 2:
-                                teamIntro = ($"{teamName1} it's your turn.");
-                                break;
-                            case 3:
-                                teamIntro = ($"{teamName1} this question's yours.");
-                                break;
-                            case 4:
-                                teamIntro = ($"{teamName1} let's see if you can get this one.");
-                                break;
-                            case 5:
-                                teamIntro = ($"{teamName1}! I've picked this one especially for you...");
-                                break;
-                            case 6:
-                                teamIntro = ($"{teamName1} this is a tough one!");
-                                break;
-                            case 7:
-                                teamIntro = ($"{teamName1} whenever you're ready, here's your question:");
-                                break;
-                            default:
-                                teamIntro = ($"{teamName1} try this one on for size:");
-                                break;
-                        }
-                    }
+                    teamIntro = GetTeamIntro(shuffledIntegers, teamName1, i);
                 }
                 else
                 {
-                    if (i == 9)
-                    {
-                        teamIntro = ($"{teamName2} time for your final question.");
-                    }
-                    else
-                    {
-                        switch (shuffledIntegers[i])
-                        {
-                            case 1:
-                                teamIntro = ($"{teamName2} you're up!");
-                                break;
-                            case 2:
-                                teamIntro = ($"{teamName2} it's your turn.");
-                                break;
-                            case 3:
-                                teamIntro = ($"{teamName2} this question's yours.");
-                                break;
-                            case 4:
-                                teamIntro = ($"{teamName2} let's see if you can get this one.");
-                                break;
-                            case 5:
-                                teamIntro = ($"{teamName2}! I've picked this one especially for you...");
-                                break;
-                            case 6:
-                                teamIntro = ($"{teamName2} this is a tough one!");
-                                break;
-                            case 7:
-                                teamIntro = ($"{teamName2} whenever you're ready, here's your question:");
-                                break;
-                            default:
-                                teamIntro = ($"{teamName2} try this one on for size:");
-                                break;
-                        }
-                    }
+                    teamIntro = GetTeamIntro(shuffledIntegers, teamName2, i);
                 }
 
                 message = ($"{team}{myQuestion.NumText} Question:\n\n{teamIntro}\n\n{myQuestion.Question}");
@@ -315,6 +249,46 @@ namespace PopQuiz
                     }
                 }
             }
+        }
+
+        private static string GetTeamIntro(int[] shuffledIntegers, string teamName, int i)
+        {
+            string teamIntro;
+            if (i >= 8)
+            {
+                teamIntro = ($"{teamName} time for your final question.");
+            }
+            else
+            {
+                switch (shuffledIntegers[i])
+                {
+                    case 1:
+                        teamIntro = ($"{teamName} you're up!");
+                        break;
+                    case 2:
+                        teamIntro = ($"{teamName} it's your turn.");
+                        break;
+                    case 3:
+                        teamIntro = ($"{teamName} this question's yours.");
+                        break;
+                    case 4:
+                        teamIntro = ($"{teamName} let's see if you can get this one.");
+                        break;
+                    case 5:
+                        teamIntro = ($"{teamName}! I've picked this one especially for you...");
+                        break;
+                    case 6:
+                        teamIntro = ($"{teamName} this is a tough one!");
+                        break;
+                    case 7:
+                        teamIntro = ($"{teamName} whenever you're ready, here's your question:");
+                        break;
+                    default:
+                        teamIntro = ($"{teamName} try this one on for size:");
+                        break;
+                }
+            }
+            return teamIntro;
         }
 
         private static bool AnswerContainsProfanity(string answer)
