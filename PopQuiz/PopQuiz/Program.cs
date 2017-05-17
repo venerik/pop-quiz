@@ -9,6 +9,9 @@ namespace PopQuiz
         static Random _random = new Random();
         static bool _voiceYN;
         static SpeechSynthesizer _synth;
+        static Team _team1 = new Team();
+        static Team _team2 = new Team();
+
 
         static void Shuffle<T>(T[] array)
         {
@@ -36,8 +39,6 @@ namespace PopQuiz
             int[] shuffledIntegers = { 1, 2, 3, 4, 5, 6, 7, 8 };
             Shuffle(shuffledIntegers);
 
-            string teamName1 = "";
-            string teamName2 = "";
             // Unclear what these are intended to do (for formatting it seems)
             string team;
             string captains;
@@ -116,25 +117,25 @@ namespace PopQuiz
             Broadcast(message);
 
         Start:
-            teamName1 = Console.ReadLine();
+            _team1.Name = Console.ReadLine();
             //This is the first if to give a true result initally when a false is expected but does not break the program
-            if (string.IsNullOrEmpty(teamName1))
+            if (string.IsNullOrEmpty(_team1.Name))
             {
                 goto Start;
             }
 
-            message = ("\nWelcome to the game " + teamName1 + "!\n\nTeam 2, now it's your turn.\nPlease enter your team name...");
+            message = ("\nWelcome to the game " + _team1.Name + "!\n\nTeam 2, now it's your turn.\nPlease enter your team name...");
             Broadcast(message);
         same:
-            teamName2 = Console.ReadLine();
+            _team2.Name = Console.ReadLine();
             //This is the second
-            if (string.IsNullOrEmpty(teamName2))
+            if (string.IsNullOrEmpty(_team2.Name))
             {
                 goto same;
             }
             Console.Title = "Quiz";
 
-            bool result = String.Equals(teamName1, teamName2, StringComparison.InvariantCultureIgnoreCase);
+            bool result = String.Equals(_team1.Name, _team2.Name, StringComparison.InvariantCultureIgnoreCase);
 
             if (result == true)
             {
@@ -143,10 +144,10 @@ namespace PopQuiz
                 goto same;
             }
 
-            message = ("\n\nWelcome to the game " + teamName2 + "!\nTeam names are set... Let's get ready to begin.");
+            message = ("\n\nWelcome to the game " + _team2.Name + "!\nTeam names are set... Let's get ready to begin.");
             Broadcast(message);
 
-            int tl = teamName1.Length;
+            int tl = _team1.Name.Length;
             int space2 = (25 - tl);
             string space = null;
 
@@ -155,7 +156,7 @@ namespace PopQuiz
                 space = (space + " ");
             }
 
-            team = ($"                         {teamName1}{space}{teamName2}\n{team}\n\n");
+            team = ($"                         {_team1.Name}{space}{_team2.Name}\n{team}\n\n");
             if (_voiceYN == false)
             {
                 Console.WriteLine("\n3");
@@ -186,11 +187,11 @@ namespace PopQuiz
 
                 if (IsOdd(i + 1))
                 {
-                    teamIntro = GetTeamIntro(shuffledIntegers, teamName1, i);
+                    teamIntro = GetTeamIntro(shuffledIntegers, _team1.Name, i);
                 }
                 else
                 {
-                    teamIntro = GetTeamIntro(shuffledIntegers, teamName2, i);
+                    teamIntro = GetTeamIntro(shuffledIntegers, _team2.Name, i);
                 }
 
                 message = ($"{team}{myQuestion.NumText} Question:\n\n{teamIntro}\n\n{myQuestion.Question}");
