@@ -53,25 +53,19 @@ namespace PopQuiz
 
             ShowCountDown();
 
-            Console.Clear();
-
             var game = new Game(_team1, _team2);
 
-            string teamIntro;
-            var tests = Test.GetTests();
-
-            for (int i = 0; i < 10; i++)
+            foreach(var test in game.Tests)
             {
                 Console.Clear();
-                var myQuestion = tests[i + 1];
 
-                teamIntro = GetTeamIntro(_shuffledIntegers, game.CurrentTeam.Name, i);
+                var teamIntro = GetTeamIntro(_shuffledIntegers, game.CurrentTeam.Name, test.Key);
 
                 Broadcast(View.PrintTeams(_team1, _team2));
-                Broadcast($"{myQuestion.NumText} Question:\n\n{teamIntro}\n\n{myQuestion.Question}");
+                Broadcast($"{test.Value.NumText} Question:\n\n{teamIntro}\n\n{test.Value.Question}");
 
                 var answer = AskForAnswer();
-                if (string.Equals(answer, myQuestion.Answer, StringComparison.InvariantCultureIgnoreCase))
+                if (string.Equals(answer, test.Value.Answer, StringComparison.InvariantCultureIgnoreCase))
                 {
                     game.CurrentTeam.IncreaseScore(1);
                 }
