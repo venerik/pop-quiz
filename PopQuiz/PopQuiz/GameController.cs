@@ -24,6 +24,19 @@ namespace PopQuiz
             PlayGame();
         }
 
+        private SpeechSynthesizer Synthesizer
+        {
+            get
+            {
+                if (_synth == null)
+                {
+                    _synth = new SpeechSynthesizer();
+                    _synth.SelectVoice("Microsoft Zira Desktop");
+                }
+                return _synth;
+            }
+        }
+
         private void SetupGame()
         {
             AdjustConsoleSettings();
@@ -113,82 +126,61 @@ namespace PopQuiz
 
         private string AskForAnswer()
         {
-        blank:
-            string answer = Console.ReadLine();
-            //This is the third
-            if (string.IsNullOrEmpty(answer))
+            string answer;
+
+            do
             {
-                goto blank;
-            }
+                answer = Console.ReadLine();
+            } while (string.IsNullOrEmpty(answer));
+
             return answer;
         }
 
         private TeamType AskForTypeOfTeams()
         {
             Broadcast("Would you like me to assign you a team at random or just pick team captains for you?\nPress T for a random Team or C for team Captains:");
-        incorrect:
-            var cki = Console.ReadKey();
-
-            bool createTeams = String.Equals(cki.Key.ToString(), "T", StringComparison.InvariantCultureIgnoreCase);
-            bool createTeamCaptains = String.Equals(cki.Key.ToString(), "C", StringComparison.InvariantCultureIgnoreCase);
-
-            if (!createTeams && !createTeamCaptains)
+            ConsoleKeyInfo cki;
+            do
             {
+                cki = Console.ReadKey();
+                var validKeys = new ConsoleKey[] { ConsoleKey.T, ConsoleKey.C };
+                if (validKeys.Contains(cki.Key))
+                {
+                    break;
+                }
                 Broadcast("\nThat is not a valid selection, please enter either a T or a C");
-                goto incorrect;
-            }
-
-            return createTeams ? TeamType.Players : TeamType.Captains;
+            } while (true);
+ 
+            return cki.Key == ConsoleKey.T ? TeamType.Players : TeamType.Captains;
         }
 
         private void AskForTeamName(Team team)
         {
-
-        Start:
-            team.Name = Console.ReadLine();
-            //This is the first if to give a true result initally when a false is expected but does not break the program
-            if (string.IsNullOrEmpty(team.Name))
-            {
-                goto Start;
-            }
-
-
+            team.Name = AskForAnswer();
         }
 
         private void AskForTeamName(Team team, string otherTeamsName)
         {
-        same:
-            team.Name = Console.ReadLine();
-            //This is the second
-            if (string.IsNullOrEmpty(team.Name))
+            do
             {
-                goto same;
-            }
-
-            bool result = String.Equals(team.Name, otherTeamsName, StringComparison.InvariantCultureIgnoreCase);
-
-            if (result == true)
-            {
+                team.Name = AskForAnswer();
+                if (!String.Equals(team.Name, otherTeamsName, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    break;
+                }
                 Broadcast("\n\nYou can't have the same team names...\nStop being lazy and give me another one!");
-                goto same;
-            }
+            } while (true);
         }
 
         private void AskForVoiceSupport()
         {
-            var message = "Welcome to the pop quiz!\nWould you like me to continue voicing this quiz?\nPress Y for Yes or any other key to continue without:";
-            Console.WriteLine(message);
-
-            _synth = new SpeechSynthesizer();
-            _synth.SelectVoice("Microsoft Zira Desktop");
+            Console.WriteLine("Welcome to the pop quiz!\nWould you like me to continue voicing this quiz?\nPress Y for Yes or any other key to continue without:");
 
             ConsoleKeyInfo cki = Console.ReadKey();
+            _voiceYN = cki.Key == ConsoleKey.Y;
+
             Console.Clear();
-
-            _voiceYN = String.Equals(cki.Key.ToString(), "Y", StringComparison.InvariantCultureIgnoreCase);
-
-            message = "Thank you for your selection.";
-            Broadcast(message);
+            Broadcast("Thank you for your selection.");
         }
 
         private static void AdjustConsoleSettings()
@@ -212,26 +204,15 @@ namespace PopQuiz
 
         private static bool AnswerContainsProfanity(string answer)
         {
-            List<string> Profanity = new List<string>();
-            Profanity.Add("fuck");
-            Profanity.Add("shit");
-            Profanity.Add("bollocks");
-            Profanity.Add("wank");
-            Profanity.Add("cunt");
-            Profanity.Add("tosser");
-            Profanity.Add("bastard");
-            Profanity.Add("fanny");
-            Profanity.Add("faggot");
-            Profanity.Add("arse");
+            var profaneWords = new List<string> { "fuck", "shit", "bollocks", "wank", "cunt", "tosser", "bastard", "fanny", "faggot", "arse" };
 
-            for (int p = 0; p < Profanity.Count; p++)
+            foreach(var word in profaneWords)
             {
-                if (answer.ToLower().Contains(Profanity[p]))
+                if (answer.ToLower().Contains(word))
                 {
                     return true;
                 }
             }
-
             return false;
         }
 
@@ -240,7 +221,7 @@ namespace PopQuiz
             Console.WriteLine(message);
             if (_voiceYN == true)
             {
-                _synth.Speak(message);
+                Synthesizer.Speak(message);
             }
         }
 
