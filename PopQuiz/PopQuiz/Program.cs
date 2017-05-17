@@ -181,18 +181,6 @@ namespace PopQuiz
             int t1Score = 0;
             int t2Score = 0;
 
-            List<string> Profanity = new List<string>();
-            Profanity.Add("fuck");
-            Profanity.Add("shit");
-            Profanity.Add("bollocks");
-            Profanity.Add("wank");
-            Profanity.Add("cunt");
-            Profanity.Add("tosser");
-            Profanity.Add("bastard");
-            Profanity.Add("fanny");
-            Profanity.Add("faggot");
-            Profanity.Add("arse");
-
             for (int i = 0; i < 10; i++)
             {
                 Console.Clear();
