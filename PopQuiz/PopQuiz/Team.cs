@@ -13,4 +13,10 @@ namespace PopQuiz
             _players.Add(player);
         }
     }
+
+    public enum TeamType
+    {
+        Players,
+        Captains
+    }
 }
